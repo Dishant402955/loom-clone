@@ -1,0 +1,25 @@
+<svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="text-white"
+            >
+              <path
+                d="M12 2L15 8H9L12 2Z"
+                fill="white"
+              />
+              <path
+                d="M12 22L9 16H15L12 22Z"
+                fill="white"
+              />
+              <path
+                d="M2 12L8 15V9L2 12Z"
+                fill="white"
+              />
+              <path
+                d="M22 12L16 9V15L22 12Z"
+                fill="white"
+              />
+            </svg>
