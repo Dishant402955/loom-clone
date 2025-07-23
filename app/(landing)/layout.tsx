@@ -1,4 +1,5 @@
 import { type Metadata } from "next";
+import { DemoImage, Details, Features, Footer, Navbar } from "./_components";
 
 interface LandingLayoutProps {
 	children: React.ReactNode;
@@ -10,7 +11,16 @@ export const metadata: Metadata = {
 };
 
 const LandingLayout = ({ children }: LandingLayoutProps) => {
-	return <div className="h-full">{children}</div>;
+	return (
+		<main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-start">
+			<Navbar />
+			{children}
+			<Details />
+			<DemoImage />
+			<Features />
+			<Footer />
+		</main>
+	);
 };
 
 export default LandingLayout;
