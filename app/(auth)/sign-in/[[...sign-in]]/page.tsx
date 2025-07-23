@@ -1,9 +1,10 @@
+import { Loader } from "@/components/loader";
 import { SignIn } from "@clerk/nextjs";
 
 const SignInPage = () => {
 	return (
 		<>
-			<SignIn />
+			<SignIn fallback={<Loader />} />
 		</>
 	);
 };
