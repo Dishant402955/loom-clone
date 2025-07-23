@@ -6,14 +6,16 @@ export const metadata: Metadata = {
 	description: "A new recording tool that just records.",
 };
 
-export default function RootLayout({
+const RootLayout = ({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
-}>) {
+}>) => {
 	return (
-		<html lang="en">
+		<html lang="en" className="dark">
 			<body className={`antialiased`}>{children}</body>
 		</html>
 	);
-}
+};
+
+export default RootLayout;
