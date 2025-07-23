@@ -2,8 +2,8 @@ import {
 	CardDescription,
 	CardTitle,
 	HoverEffect,
-} from "@/components/card-hover-effect";
-import SpotlightCard from "@/components/spotlight-card";
+} from "@/components/ui/card-hover-effect";
+import SpotlightCard from "@/components/ui/spotlight-card";
 
 export const Features = () => {
 	const featureCards = [

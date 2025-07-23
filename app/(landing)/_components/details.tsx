@@ -1,5 +1,5 @@
-import { TextGenerateEffect } from "@/components/text-generate-effect";
-import { TypewriterEffect } from "@/components/typewriter-effect";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
 export const Details = () => {
 	return (

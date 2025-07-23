@@ -1,4 +1,4 @@
-import { ContainerScroll } from "@/components/container-scroll-animation";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
 export const DemoImage = () => {
 	return (

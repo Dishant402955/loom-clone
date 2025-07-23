@@ -1,4 +1,4 @@
-import { LampContainer } from "@/components/lamp-effect";
+import { LampContainer } from "@/components/ui/lamp-effect";
 import { motion } from "framer-motion";
 
 export const Hero = () => {
