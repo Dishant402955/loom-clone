@@ -14,8 +14,8 @@ export const Details = () => {
 					]}
 				/>
 				<p className="mt-4 text-muted-foreground text-base md:text-lg">
-					Whether it's a bug report, product demo, or onboarding — we've got you
-					covered.
+					Whether it&apos;s a bug report, product demo, or onboarding —
+					we&apos;ve got you covered.
 				</p>
 			</section>
 
