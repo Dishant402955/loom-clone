@@ -5,8 +5,8 @@ import {
 	getWorkspaces,
 	verifyAccessToWorkspace,
 } from "@/actions/workspace.actions";
-import { query } from "@/lib/react-query";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { ReactQueryClientProvider } from "@/components/providers/reactquery-client-provider";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
 interface WorkspaceIdLayoutProps {
@@ -26,6 +26,7 @@ const WorkspaceIdLayout = async ({
 		return redirect("/callback");
 	}
 
+	const query = new QueryClient();
 	await query.prefetchQuery({
 		queryKey: ["workspace-folders"],
 		queryFn: () => getWorkspaceFolders({ workspaceId }),
@@ -44,9 +45,9 @@ const WorkspaceIdLayout = async ({
 	});
 
 	return (
-		<HydrationBoundary state={dehydrate(query)}>
+		<ReactQueryClientProvider dehydratedState={dehydrate(query)}>
 			<div className="h-full w-full">{children}</div>
-		</HydrationBoundary>
+		</ReactQueryClientProvider>
 	);
 };
 
