@@ -6,6 +6,7 @@ import {
 	verifyAccessToWorkspace,
 } from "@/actions/workspace.actions";
 import { query } from "@/lib/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
 interface WorkspaceIdLayoutProps {
@@ -42,7 +43,11 @@ const WorkspaceIdLayout = async ({
 		queryFn: () => getNotifications({ userId: res.data?.userId }),
 	});
 
-	return <div className="h-full w-full">{children}</div>;
+	return (
+		<HydrationBoundary state={dehydrate(query)}>
+			<div className="h-full w-full">{children}</div>
+		</HydrationBoundary>
+	);
 };
 
 export default WorkspaceIdLayout;

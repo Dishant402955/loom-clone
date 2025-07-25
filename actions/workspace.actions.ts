@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { member, user, workspace } from "@/db/schema";
+import { member, subscription, user, workspace } from "@/db/schema";
 import { currentUser } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 
@@ -51,11 +51,15 @@ export const verifyAccessToWorkspace = async ({
 
 export const getWorkspaces = async ({ userId }: { userId: string }) => {
 	try {
-		const workspaces = await db
-			.select()
-			.from(workspace)
-			.where(eq(member.userId, userId));
-		return { status: 200, success: true, data: { workspaces } };
+		const workspaces = await db.query.workspace.findMany({
+			where: eq(member.userId, userId),
+			with: {
+				members: { columns: { userId: true, workspaceId: true } },
+			},
+			columns: { userId: false },
+		});
+
+		return { status: 200, success: true, data: workspaces };
 	} catch (error) {
 		return { status: 500, success: false };
 	}
