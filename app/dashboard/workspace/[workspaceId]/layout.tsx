@@ -1,4 +1,11 @@
-import { verifyAccessToWorkspace } from "@/actions/workspace.actions";
+import { getWorkspaceFolders } from "@/actions/folder.actions";
+import { getNotifications } from "@/actions/notification.actions";
+import { getAllUserVideos } from "@/actions/video.actions";
+import {
+	getWorkspaces,
+	verifyAccessToWorkspace,
+} from "@/actions/workspace.actions";
+import { query } from "@/lib/react-query";
 import { redirect } from "next/navigation";
 
 interface WorkspaceIdLayoutProps {
@@ -12,17 +19,30 @@ const WorkspaceIdLayout = async ({
 }: WorkspaceIdLayoutProps) => {
 	const { workspaceId } = await params;
 
-	const workspace = await verifyAccessToWorkspace({ workspaceId });
+	const res = await verifyAccessToWorkspace({ workspaceId });
 
-	if (!workspace.success) {
+	if (!res.success || !res.data?.userId) {
 		return redirect("/callback");
 	}
-	return (
-		<div className="h-full w-full">
-			{JSON.stringify(workspace)}
-			{children}
-		</div>
-	);
+
+	await query.prefetchQuery({
+		queryKey: ["workspace-folders"],
+		queryFn: () => getWorkspaceFolders({ workspaceId }),
+	});
+	await query.prefetchQuery({
+		queryKey: ["user-videos"],
+		queryFn: () => getAllUserVideos({ workspaceId }),
+	});
+	await query.prefetchQuery({
+		queryKey: ["user-workspaces"],
+		queryFn: () => getWorkspaces({ userId: res.data?.userId }),
+	});
+	await query.prefetchQuery({
+		queryKey: ["user-notifications"],
+		queryFn: () => getNotifications({ userId: res.data?.userId }),
+	});
+
+	return <div className="h-full w-full">{children}</div>;
 };
 
 export default WorkspaceIdLayout;

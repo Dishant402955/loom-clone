@@ -36,12 +36,27 @@ export const verifyAccessToWorkspace = async ({
 			return {
 				status: 200,
 				success: true,
-				data: { workspace: { id: workspaceMember.workspaceId } },
+				data: {
+					workspace: { id: workspaceMember.workspaceId },
+					userId: existingUser.id,
+				},
 			};
 		}
 
 		return { status: 403, success: false, data: undefined };
 	} catch (error) {
 		return { status: 500, success: false, data: undefined };
+	}
+};
+
+export const getWorkspaces = async ({ userId }: { userId: string }) => {
+	try {
+		const workspaces = await db
+			.select()
+			.from(workspace)
+			.where(eq(member.userId, userId));
+		return { status: 200, success: true, data: { workspaces } };
+	} catch (error) {
+		return { status: 500, success: false };
 	}
 };
