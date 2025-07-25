@@ -7,7 +7,7 @@ export const Hero = () => {
 			<motion.h1
 				initial={{ opacity: 0, y: 150 }}
 				whileInView={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.8, ease: "easeInOut" }}
+				transition={{ duration: 0.7, ease: "easeInOut" }}
 				className="mt-8 bg-gradient-to-br from-slate-200 to-slate-400 py-4 bg-clip-text text-center text-4xl font-semibold tracking-tight text-transparent md:text-7xl"
 			>
 				Capture. Share. <br /> In one click.

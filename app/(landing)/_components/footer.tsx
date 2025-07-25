@@ -10,7 +10,7 @@ export const Footer = () => {
 				Join thousands using Boom to record smarter, not harder.
 			</p>
 			<div className="mt-6 flex justify-center space-x-4">
-				<Link href="/signup">
+				<Link href="/sign-up">
 					<button className="px-6 py-2 rounded-md bg-primary text-background font-medium hover:opacity-90 transition">
 						Sign Up Free
 					</button>

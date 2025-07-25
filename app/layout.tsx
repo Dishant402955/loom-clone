@@ -19,8 +19,8 @@ const RootLayout = ({
 			appearance={{
 				baseTheme: dark,
 			}}
-			signInForceRedirectUrl={"/dashboard"}
-			signUpForceRedirectUrl={"/dashboard"}
+			signInForceRedirectUrl={"/callback"}
+			signUpForceRedirectUrl={"/callback"}
 		>
 			<html lang="en">
 				<body className={`antialiased`}>{children}</body>

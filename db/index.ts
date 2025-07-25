@@ -1,6 +1,12 @@
 import "dotenv/config";
+import * as s from "./schema";
+import * as r from "./relations";
 
-// import { drizzle } from "drizzle-orm/neon-http";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 
-export const db = drizzle(process.env.DATABASE_URL!);
+const sql = neon(process.env.DATABASE_URL!); // ✅ Create neon client
+
+export const db = drizzle(sql, {
+	schema: { ...s, ...r },
+});
