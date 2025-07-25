@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { media, member, subscription, user, workspace } from "@/db/schema";
+import { media, subscription, user, workspace } from "@/db/schema";
 import { currentUser } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 
@@ -15,18 +15,14 @@ export const afterAuthentication = async () => {
 
 		const existingUser = await db.query.user.findFirst({
 			where: eq(user.clerkId, currUser.id),
-			with: {
-				workspaces: true,
-				subscriptions: true,
-				media: true,
-			},
+			columns: { id: true },
 		});
 
 		if (existingUser) {
 			return {
 				status: 200,
 				success: true,
-				data: { ...existingUser, media: existingUser.media[0] },
+				data: { user: { ...existingUser } },
 			};
 		}
 
@@ -41,9 +37,9 @@ export const afterAuthentication = async () => {
 				trial: true,
 				createdAt: new Date(Date.now()).toISOString(),
 			})
-			.returning();
+			.returning({ id: user.id });
 
-		const [workspaces, subscriptions, medias] = await db.batch([
+		await db.batch([
 			db
 				.insert(workspace)
 				.values({
@@ -74,12 +70,56 @@ export const afterAuthentication = async () => {
 			status: 201,
 			success: true,
 			data: {
-				...newUser[0],
-				workspaces,
-				media: medias[0],
-				subscriptions,
+				user: { ...newUser[0] },
 			},
 		};
+	} catch (error) {
+		return { status: 505, success: false };
+	}
+};
+
+export const afterRedirect = async () => {
+	try {
+		const currUser = await currentUser();
+
+		if (!currUser) {
+			return { status: 403, success: false };
+		}
+
+		// const existingUser = await db.query.user.findFirst({
+		// 	where: eq(user.clerkId, currUser.id),
+		// 	with: {
+		// 		workspaces: true,
+		// 		subscriptions: true,
+		// 		media: true,
+		// 	},
+		// });
+
+		// if (existingUser) {
+		// 	return {
+		// 		status: 200,
+		// 		success: true,
+		// 		data: { ...existingUser, media: existingUser.media[0] },
+		// 	};
+		// }
+
+		const existingUser = await db.query.user.findFirst({
+			where: eq(user.clerkId, currUser.id),
+			with: {
+				workspaces: true,
+			},
+			columns: { id: true },
+		});
+
+		if (existingUser) {
+			return {
+				status: 200,
+				success: true,
+				data: { ...existingUser },
+			};
+		}
+
+		return { status: 404, success: false };
 	} catch (error) {
 		return { status: 505, success: false };
 	}

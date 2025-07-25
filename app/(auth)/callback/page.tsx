@@ -8,7 +8,7 @@ const CallbackPage = async () => {
 		return redirect("/sign-in");
 	}
 
-	return redirect(`/dashboard/workspace/${auth.data?.workspaces[0].id}`);
+	return redirect(`/dashboard`);
 };
 
 export default CallbackPage;
