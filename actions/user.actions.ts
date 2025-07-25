@@ -1,16 +1,17 @@
 "use server";
 
 import { db } from "@/db";
-import { media, subscription, user, workspace } from "@/db/schema";
+import { media, member, subscription, user, workspace } from "@/db/schema";
 import { currentUser } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import { v4 as uuid } from "uuid";
 
 export const afterAuthentication = async () => {
 	try {
 		const currUser = await currentUser();
 
 		if (!currUser) {
-			return { status: 403, success: false };
+			return { status: 403, success: false, data: undefined };
 		}
 
 		const existingUser = await db.query.user.findFirst({
@@ -39,6 +40,7 @@ export const afterAuthentication = async () => {
 			})
 			.returning({ id: user.id });
 
+		const wId = uuid();
 		await db.batch([
 			db
 				.insert(workspace)
@@ -46,6 +48,7 @@ export const afterAuthentication = async () => {
 					name: `${currUser.firstName}'s Workspace`,
 					userId: newUser[0].id,
 					type: "PRIVATE",
+					id: wId,
 				})
 				.returning(),
 			db
@@ -64,6 +67,14 @@ export const afterAuthentication = async () => {
 					presetType: "SD",
 				})
 				.returning(),
+			db
+				.insert(member)
+				.values({
+					userId: newUser[0].id,
+					workspaceId: wId,
+					createdAt: new Date(Date.now()).toISOString(),
+					member: true,
+				}),
 		]);
 
 		return {
@@ -74,7 +85,7 @@ export const afterAuthentication = async () => {
 			},
 		};
 	} catch (error) {
-		return { status: 505, success: false };
+		return { status: 505, success: false, data: undefined };
 	}
 };
 
@@ -83,25 +94,8 @@ export const afterRedirect = async () => {
 		const currUser = await currentUser();
 
 		if (!currUser) {
-			return { status: 403, success: false };
+			return { status: 403, success: false, data: undefined };
 		}
-
-		// const existingUser = await db.query.user.findFirst({
-		// 	where: eq(user.clerkId, currUser.id),
-		// 	with: {
-		// 		workspaces: true,
-		// 		subscriptions: true,
-		// 		media: true,
-		// 	},
-		// });
-
-		// if (existingUser) {
-		// 	return {
-		// 		status: 200,
-		// 		success: true,
-		// 		data: { ...existingUser, media: existingUser.media[0] },
-		// 	};
-		// }
 
 		const existingUser = await db.query.user.findFirst({
 			where: eq(user.clerkId, currUser.id),
@@ -115,12 +109,15 @@ export const afterRedirect = async () => {
 			return {
 				status: 200,
 				success: true,
-				data: { ...existingUser },
+				data: {
+					...existingUser,
+					workspaces: [{ id: existingUser.workspaces[0].id }],
+				},
 			};
 		}
 
-		return { status: 404, success: false };
+		return { status: 404, success: false, data: undefined };
 	} catch (error) {
-		return { status: 505, success: false };
+		return { status: 505, success: false, data: undefined };
 	}
 };

@@ -1,0 +1,47 @@
+"use server";
+
+import { db } from "@/db";
+import { member, user, workspace } from "@/db/schema";
+import { currentUser } from "@clerk/nextjs/server";
+import { and, eq } from "drizzle-orm";
+
+export const verifyAccessToWorkspace = async ({
+	workspaceId,
+}: {
+	workspaceId: string;
+}) => {
+	try {
+		const auth = await currentUser();
+
+		if (!auth) {
+			return { status: 403, success: false, data: undefined };
+		}
+
+		const existingUser = await db.query.user.findFirst({
+			where: eq(user.clerkId, auth.id),
+		});
+
+		if (!existingUser) {
+			return { status: 403, success: false, data: undefined };
+		}
+
+		const workspaceMember = await db.query.member.findFirst({
+			where: and(
+				eq(member.userId, existingUser.id),
+				eq(member.workspaceId, workspaceId)
+			),
+		});
+
+		if (workspaceMember) {
+			return {
+				status: 200,
+				success: true,
+				data: { workspace: { id: workspaceMember.workspaceId } },
+			};
+		}
+
+		return { status: 403, success: false, data: undefined };
+	} catch (error) {
+		return { status: 500, success: false, data: undefined };
+	}
+};

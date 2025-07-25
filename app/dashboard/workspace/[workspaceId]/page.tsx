@@ -4,7 +4,11 @@ interface WorkspaceIdPageProps {
 
 const WorkspaceIdPage = async ({ params }: WorkspaceIdPageProps) => {
 	const { workspaceId } = await params;
-	return <div>{workspaceId}</div>;
+	return (
+		<div className="h-full w-full flex justify-center items-center">
+			{workspaceId}
+		</div>
+	);
 };
 
 export default WorkspaceIdPage;
