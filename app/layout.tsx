@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 export const metadata: Metadata = {
 	title: "Boom",
@@ -12,9 +14,17 @@ const RootLayout = ({
 	children: React.ReactNode;
 }>) => {
 	return (
-		<html lang="en">
-			<body className={`antialiased`}>{children}</body>
-		</html>
+		<ClerkProvider
+			appearance={{
+				baseTheme: dark,
+			}}
+			signInFallbackRedirectUrl={"/"}
+			signUpFallbackRedirectUrl={"/"}
+		>
+			<html lang="en">
+				<body className={`antialiased h-full w-full`}>{children}</body>
+			</html>
+		</ClerkProvider>
 	);
 };
 
