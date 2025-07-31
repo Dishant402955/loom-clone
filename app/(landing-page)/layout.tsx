@@ -3,7 +3,11 @@ interface Props {
 }
 
 const LandingLayout = ({ children }: Props) => {
-	return <div className="flex h-full w-full">{children}</div>;
+	return (
+		<div className="flex h-full w-full justify-center items-center">
+			{children}
+		</div>
+	);
 };
 
 export default LandingLayout;

@@ -57,7 +57,7 @@ const SignUpPage = () => {
 					<p className="text-center text-sm text-neutral-400">
 						Already have an account?
 						<Clerk.Link
-							navigate="sign-up"
+							navigate="sign-in"
 							className="font-medium text-white decoration-white/20 underline-offset-4 outline-none hover:underline focus-visible:underline ml-1"
 						>
 							Sign Up
